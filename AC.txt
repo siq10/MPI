@@ -1,0 +1,85 @@
+  void FLOODING_ST(graph G,int pi, int pr, int parent, int[] neighbors, int[] children, int[] others)
+  {
+    int terminate =0;
+    int childrenIndex = 0, otherIndex=0;
+    int status = -1;
+    while(1==1)
+    {
+      switch (status) {
+        case -1:
+        {
+          if(pi==pr && parent==NULL)
+          {
+            parent = pi;
+            send("<M>",neighbors);
+            break;
+          }
+        }
+        case 1: //message from pj
+        {
+          if(parent==NULL)
+          {
+            parent = pj;
+            send("<M>",neighbors);
+          }
+          else
+          send("<already>",pj);
+          break;
+        }
+        case 2: //parent from pj
+        {
+          children[childrenIndex] = pj;
+          childrenIndex+=1;
+          if(ContainsAllNeighborsExceptParent(children,neighbors,others,parent,childrenIndex,otherIndex, nCount))
+          {
+            terminate = 1;
+            return;
+          }
+          break;
+        }
+        case 3: //already from pj
+        {
+          others[otherIndex] = pj
+          otherIndex+=1;
+          if(ContainsAllNeighborsExceptParent(children,neighbors,others,parent,childrenIndex,otherIndex, nCount))
+          {
+            terminate=1;
+            return;
+          }
+          break;
+        }
+      }
+      if (terminate ==1)
+      break;
+    }
+    printf("I am the one process with rank %d, I hereby state that my parent is %d",my_rank,parent);
+  }
+
+  bool ContainsAllNeighborsExceptParent(int[] children, int[] neighbors, int[] others,parent, childrenIndex,otherIndex,nCount)
+  {
+    int continue = 0;
+    for (int i = 0; i < nCount;i++)
+    {
+      continue = 0;
+      for(int j=0;j< childrenIndex;j++)
+      {
+        if (neighbors[i]==children[j])
+        {
+          continue = 1;
+          break;
+        }
+      }
+      for (int k = 0; k < otherIndex; k++) {
+        if(neighbors[i] == others[k] || continue ==1)
+        {
+          continue = 1;
+          break;
+        }
+      }
+      if (continue==0)
+      {
+        return false;
+      }
+    }
+    return true;
+  }
