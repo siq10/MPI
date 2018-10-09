@@ -33,7 +33,6 @@
           if(ContainsAllNeighborsExceptParent(children,neighbors,others,parent,childrenIndex,otherIndex, nCount))
           {
             terminate = 1;
-            return;
           }
           break;
         }
@@ -44,7 +43,6 @@
           if(ContainsAllNeighborsExceptParent(children,neighbors,others,parent,childrenIndex,otherIndex, nCount))
           {
             terminate=1;
-            return;
           }
           break;
         }
@@ -52,7 +50,31 @@
       if (terminate ==1)
       break;
     }
-    printf("I am the one process with rank %d, I hereby state that my parent is %d",my_rank,parent);
+    printf("I am the process with rank %d, I hereby state that my parent is %d",my_rank,parent);
+    if(my_rank==0)
+    {
+      int graph[p][p];
+      memset(*graph,0,sizeof(int)*p*p);
+      for(int i =1;i<p;i++)
+      {
+        recv(i,msg);
+        graph[msg][++graph[msg][0]] = i;
+      }
+
+      for (int i=0;i<p;i++)
+      {
+        printf("Node %d has %d children: ",i,graph[i][0]);
+        for(int j=0;j<graph[i][0];j++)
+        {
+          printf("%d ",graph[i][j]);
+          if (j==graph[i][0] - 1)
+          {
+            printf("\n");
+          }
+        }
+      }
+
+    }
   }
 
   bool ContainsAllNeighborsExceptParent(int[] children, int[] neighbors, int[] others,parent, childrenIndex,otherIndex,nCount)
